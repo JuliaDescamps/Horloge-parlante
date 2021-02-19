@@ -15,10 +15,8 @@ library(tidyr)
 '%!in%' <- function(x,y)!('%in%'(x,y))
 
 ## Import the data ------
-setwd("/Users/julia/Documents/DESCAMPS 2022/temps_parole") # MAC R ouvre le dossier qu'on spéficie
+setwd("/Users/julia/Desktop/Horloge parlante") # MAC R ouvre le dossier qu'on spéficie
 
-DYEARS <- read.csv("years.csv")
-DYEARS_INFO <- subset(DYEARS, DYEARS$channel_name %in% c("Canal+", "Euronews", "Europe1", "France 2", "France 3", "France 5", "France Bleu", "France Culture", "France Info", "France Inter", "France 0", "LCI", "LCP/Public Sénat", "M6", "RMC", "RTL", "TF1", "TV5 Monde"))
 DHOURS <- read.csv("hours.csv")
 ## Select the data -----
 # variable Men Expression rate ----
@@ -252,11 +250,13 @@ drawClock(as.numeric(hour), 00)
 one_hour_pie("France 2", "2013", "6")
 one_hour_pie("RMC", "2011", "19")
 
-
+tot_media
 ## Animation ------
 library(animation)
 
-for (k in tot_radio) {
+
+
+for (k in c("LCI","M6","RFI","RMC","RTL","TF1")) {
   for (i in 2001:2019)
   {
     animation::saveGIF(
