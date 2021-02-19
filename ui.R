@@ -13,7 +13,7 @@ fluidPage(
             hr(),
             sliderInput("year",
                         "Année :",
-                        min = 2001,  max = 2019, value = 2010, format="####", sep = ""),
+                        min = 2001,  max = 2019, value = 2010, sep = ""),
             sliderInput("hour",
                         "Heure :",
                         min = 5,  max = 23,  value = 10)
