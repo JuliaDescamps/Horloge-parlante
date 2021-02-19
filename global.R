@@ -1,0 +1,195 @@
+########################################## --
+########################################## --
+##           Projet radio               ##
+########################################## --
+########################################## --
+
+
+## Packages ------
+library(dplyr)
+library(ggplot2)
+library(tidyr)
+require('grid')
+require('gridBase')    
+library(animation)
+library(rsconnect)
+#deployApp()
+
+# "not in" function
+'%!in%' <- function(x,y)!('%in%'(x,y))
+
+## Import the data ------
+## #setwd("~/Horloge parlante") # MAC R ouvre le dossier qu'on spéficie
+
+# DYEARS_INFO <- subset(DYEARS, DYEARS$channel_name %in% c("Canal+", "Euronews", "Europe1", "France 2", "France 3", "France 5", "France Bleu", "France Culture", "France Info", "France Inter", "France 0", "LCI", "LCP/Public Sénat", "M6", "RMC", "RTL", "TF1", "TV5 Monde"))
+DHOURS <- read.csv("hours.csv")
+## Select the data -----
+
+## * Variable Women Expression rate -----
+DHOURS$wer <- round(DHOURS$women_expression_rate, 0)
+
+
+# * Variable Men Expression rate ----
+DHOURS$mer <- 100 - DHOURS$wer 
+
+# * Channels and years of interest ------
+DHOURS_INFO <- subset(DHOURS, DHOURS$year != 2000 & DHOURS$channel_name %in% c("Canal+", "Europe1", "France 2", "France 3", "France 5", "France Bleu", "France Culture", "France Info", "France Inter", "France 0", "LCI", "LCP/Public Sénat", "M6", "RMC", "RTL", "TF1", "ARTE", "BFM TV", "RFI", "I-Télé/CNews"))
+# * Variables of interest ------
+DHOURS_INFO <- subset(DHOURS_INFO, select = c(media_type, channel_name, year, hour, wer, mer))
+
+
+## Complete data for missing values ----
+
+## Create "no_data" variable
+DHOURS_INFO$no_data <- 0
+
+
+## Media type vectors and list
+tot_radio <- unique(DHOURS_INFO[DHOURS_INFO$media_type == "radio",]$channel_name)
+tot_tv <- unique(DHOURS_INFO[DHOURS_INFO$media_type == "tv",]$channel_name)
+tot_media <- unique(DHOURS_INFO$channel_name)
+tot_radio
+tot_tv
+tot_media
+
+tot_media <- sort(tot_media)
+channels <<- as.list(tot_media)   
+
+
+
+## Missing hours for radio
+missing_radio <- data.frame()
+for (k in tot_radio){
+  for (i in 2001:2019){
+    for (h in 5:23)
+      if (h %!in% DHOURS_INFO[DHOURS_INFO$channel_name == k & DHOURS_INFO$year == i,]$hour){
+        channel_name <- unique(DHOURS_INFO[DHOURS_INFO$channel_name == k & DHOURS_INFO$year == i,]$channel_name)
+        year <- as.character(unique(DHOURS_INFO[DHOURS_INFO$channel_name == k & DHOURS_INFO$year == i,]$year))
+        hour <- as.character(h)
+        media_type <- "radio"
+        no_data <- 100
+        wer <- 0
+        mer <- 0
+        row <- data.frame(media_type, channel_name, year, hour, wer, mer, no_data)
+        missing_radio <- rbind(missing_radio, row)
+      }
+    
+  }
+  
+}
+
+
+
+## Missing hours for tv
+missing_tv <- data.frame()
+for (k in tot_tv){
+  for (i in 2010:2019){
+    for (h in 5:23)
+      if (h %!in% DHOURS_INFO[DHOURS_INFO$channel_name == k & DHOURS_INFO$year == i,]$hour){
+        channel_name <- unique(DHOURS_INFO[DHOURS_INFO$channel_name == k & DHOURS_INFO$year == i,]$channel_name)
+        year <- as.character(unique(DHOURS_INFO[DHOURS_INFO$channel_name == k & DHOURS_INFO$year == i,]$year))
+        hour <- as.character(h)
+        media_type <- "tv"
+        no_data <- 100
+        wer <- 0
+        mer <- 0
+        row <- data.frame(media_type, channel_name, year, hour, wer, mer, no_data)
+        missing_tv <- rbind(missing_tv, row)
+      }
+    
+  }
+  
+}
+
+
+## Paste data and missing data
+
+DHOURS_INFO <- rbind(DHOURS_INFO, missing_radio)
+DHOURS_INFO <- rbind(DHOURS_INFO, missing_tv)
+
+## Missing years for tv
+missing_tv_y <- data.frame()
+for (k in tot_tv){
+  for (i in 2001:2019){
+      if (i %!in% DHOURS_INFO[DHOURS_INFO$channel_name == k,]$year){
+        for (h in 5:23){
+        channel_name <- unique(DHOURS_INFO[DHOURS_INFO$channel_name == k,]$channel_name)
+        year <- i
+        hour <- as.character(h)
+        media_type <- "tv"
+        no_data <- 100
+        wer <- 0
+        mer <- 0
+        row <- data.frame(media_type, channel_name, year, hour, wer, mer, no_data)
+        missing_tv_y <- rbind(missing_tv_y, row)
+        }
+      }
+    
+  }
+  
+}
+
+
+## Paste data and missing data years
+DHOURS_INFO <- rbind(DHOURS_INFO, missing_tv_y)
+
+  
+
+## Hour_pie functions -----
+
+## Draw_clock
+
+
+drawClock <- function(hour, minute) 
+{
+  t <- seq(0, 2*pi, length=13)[-13]
+  x <- cos(t)
+  y <- sin(t)
+  
+  vps <- baseViewports()
+  pushViewport(vps$inner, vps$figure, vps$plot)
+  # ticks
+  
+  grid.segments(x, y, x*.9, y*.9, default="native", gp=gpar(lex=1.5))
+  # Hour hand
+  hourAngle <- pi/2 - (hour + minute/60)/12*2*pi
+  grid.segments(0, 0, 
+                .6*cos(hourAngle), .6*sin(hourAngle), 
+                default="native", gp=gpar(lex=5))
+  grid.text(hour, .8*cos(hourAngle), .8*sin(hourAngle), default = "native")
+  # Minute hand
+  minuteAngle <- pi/2 - (minute)/60*2*pi
+  grid.segments(0, 0, 
+                .8*cos(minuteAngle), .8*sin(minuteAngle), 
+                default="native", gp=gpar(lex=3))    
+  popViewport(3)
+  #par(mar = c(35,25,20,36))
+}
+
+
+## One_hour_pie 
+one_hour_pie <- function(channel, year, hour){
+title <- paste("Répartition du temps de parole à", hour, "h sur", channel, "en", year, sep = " ")
+labelw <- paste(DHOURS_INFO[DHOURS_INFO$channel_name == channel & DHOURS_INFO$year == year & DHOURS_INFO$hour == hour,]$wer, "%", sep = " ")
+labelm <- paste(DHOURS_INFO[DHOURS_INFO$channel_name == channel & DHOURS_INFO$year == year & DHOURS_INFO$hour == hour,]$mer, "%", sep = " ")
+pie(c(DHOURS_INFO[DHOURS_INFO$channel_name == channel & DHOURS_INFO$year == year & DHOURS_INFO$hour == hour,]$wer, DHOURS_INFO[DHOURS_INFO$channel_name == channel & DHOURS_INFO$year == year & DHOURS_INFO$hour == hour,]$mer, DHOURS_INFO[DHOURS_INFO$channel_name == channel & DHOURS_INFO$year == year & DHOURS_INFO$hour == hour,]$no_data), 
+    cex = 1,
+    cex.main = 1,
+    labels = c(labelw, labelm),   
+    clockwise=TRUE,
+    radius=1.0, 
+    init.angle=90, 
+    col=c('#fdb462', '#9ad9ce', '#b3b3b3'),
+    border=NA, 
+    main = title)
+legend("bottomright",c("Femmes","Hommes", "Pas de données"), bty="n", 
+       cex=0.9, fill =c('#fdb462', '#9ad9ce', '#b3b3b3') )
+drawClock(as.numeric(hour), 00)
+}
+
+## Test
+# one_hour_pie("France 2", "2013", "6")
+# one_hour_pie("RMC", "2011", "17")
+
+
+## Animation ------
