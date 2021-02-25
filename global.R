@@ -172,6 +172,7 @@ one_hour_pie <- function(channel, year, hour){
 title <- paste("Répartition du temps de parole à", hour, "h sur", channel, "en", year, sep = " ")
 labelw <- paste(DHOURS_INFO[DHOURS_INFO$channel_name == channel & DHOURS_INFO$year == year & DHOURS_INFO$hour == hour,]$wer, "%", sep = " ")
 labelm <- paste(DHOURS_INFO[DHOURS_INFO$channel_name == channel & DHOURS_INFO$year == year & DHOURS_INFO$hour == hour,]$mer, "%", sep = " ")
+par(mar=c(2, 2, 3, 3), xpd=TRUE)
 pie(c(DHOURS_INFO[DHOURS_INFO$channel_name == channel & DHOURS_INFO$year == year & DHOURS_INFO$hour == hour,]$wer, DHOURS_INFO[DHOURS_INFO$channel_name == channel & DHOURS_INFO$year == year & DHOURS_INFO$hour == hour,]$mer, DHOURS_INFO[DHOURS_INFO$channel_name == channel & DHOURS_INFO$year == year & DHOURS_INFO$hour == hour,]$no_data), 
     cex = 1,
     cex.main = 1,
@@ -182,13 +183,16 @@ pie(c(DHOURS_INFO[DHOURS_INFO$channel_name == channel & DHOURS_INFO$year == year
     col=c('#fdb462', '#9ad9ce', '#b3b3b3'),
     border=NA, 
     main = title)
-legend("bottomright",c("Femmes","Hommes", "Pas de données"), bty="n", 
-       cex=0.9, fill =c('#fdb462', '#9ad9ce', '#b3b3b3') )
+legend(x = 0.6, y = -0.9 ,c("Femmes","Hommes", "Pas de données"), bty="n", 
+       cex=0.8, fill =c('#fdb462', '#9ad9ce', '#b3b3b3') )
 drawClock(as.numeric(hour), 00)
 }
 
+
+
+
 ## Test
-# one_hour_pie("France 2", "2013", "6")
+one_hour_pie("France 2", "2013", "6")
 # one_hour_pie("RMC", "2011", "17")
 
 

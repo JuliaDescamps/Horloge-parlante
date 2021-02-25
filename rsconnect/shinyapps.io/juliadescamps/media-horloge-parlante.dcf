@@ -5,9 +5,9 @@ account: juliadescamps
 server: shinyapps.io
 hostUrl: https://api.shinyapps.io/v1
 appId: 3667528
-bundleId: 4246932
+bundleId: 4249264
 url: https://juliadescamps.shinyapps.io/media-horloge-parlante/
-when: 1613777129.60315
+when: 1613844594.10765
 asMultiple: FALSE
 asStatic: FALSE
-ignoredFiles: ARTE_2001.gif|ARTE_2002.gif|ARTE_2003.gif|ARTE_2004.gif|global.RData|temps_parole.R
+ignoredFiles: temps_parole.R|GIF
