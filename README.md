@@ -13,4 +13,4 @@ La fonction drawClock est une adaptation de la [fonction du même nom]( https://
 
 Il est ensuite possible de créer un gif animé où l’aiguille se déplace sur le cadran, comme au cours d’une journée sur la chaîne en question, à année donnée. 
 
-![alt text](https://github.com/JuliaDescamps/Horloge-parlante/blob/master/GIF/France%202_2019.gif)
+![alt text](https://github.com/JuliaDescamps/Horloge-parlante/blob/master/GIF/France%20Info_2019.gif)
