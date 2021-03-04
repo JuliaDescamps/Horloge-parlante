@@ -9,7 +9,7 @@ J’ai choisi de me concentrer sur les principales chaînes d’information, exc
 ## Visualisation
 De manière très triviale, j’ai construit une série de diagrammes circulaires (ou « camemberts ») qui, à une chaîne, une année et une heure donnée, affiche les taux d’expression masculine et féminine. Les diagrammes circulaires sont souvent critiqués pour les visualisations trompeuses qu’ils engendrent, accusés de sous-estimer ou surestimer certaines variables du fait d’une forme circulaire peu lisible. Puisque les données modélisées sont horaires, j’ai choisi d’exploiter cette forme souvent décriée, afin de superposer sur le graphique une horloge dont l’aiguille indique l’heure visualisée. Le but est d’offrir au lecteur une visualisation originale lui permettant de comparer la position de l’aiguille sur le cadran avec la répartition de la parole féminine et masculine effective à cet horaire. 
 
-La fonction drawClock est une adaptation de la [fonction du même nom]( https://stackoverflow.com/questions/11877379/how-to-draw-clock-in-r) proposée par Paul Murrell dans son ouvrage R graphics 2nd Edition. 
+La fonction drawClock est une adaptation de la [fonction du même nom]( https://stackoverflow.com/questions/11877379/how-to-draw-clock-in-r) proposée par Paul Murrell dans son ouvrage <i>R graphics 2nd Edition</i>. 
 
 Il est ensuite possible de créer un gif animé où l’aiguille se déplace sur le cadran, comme au cours d’une journée sur la chaîne en question, à année donnée. 
 
