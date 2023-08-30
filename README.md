@@ -1,5 +1,6 @@
 # Horloge-parlante
 Ce code propose une visualisation interactive du taux d’expression masculine et féminine sur plusieurs chaînes d'information (radio et télévision), pour différentes années et différentes heures de la journée.
+[Visualisation complète dans l'application shiny](https://juliadescamps.shinyapps.io/media-horloge-parlante/)
 
 ## Données
 [Les données](https://www.data.gouv.fr/fr/datasets/temps-de-parole-des-hommes-et-des-femmes-a-la-television-et-a-la-radio/) ont été récoltées par l’INA [(Doukhan & Carrive, 2018)]( https://www.isca-speech.org/archive/JEP_2018/pdfs/192838.pdf) : à partir de l’écoute de plus d’un million d’heure de programmes sur différentes chaînes de 1995 à 2019, un logiciel d’apprentissage automatique a permis de distinguer d’une part les plages de paroles des plages musicales. Il a ensuite pu déterminer le taux d’expression féminine et masculine pour chaque tranche horaire. Le taux d’expression féminine (resp. masculine) est défini comme le pourcentage de temps de parole attribué aux femmes (resp. aux hommes). 
